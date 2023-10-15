@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/style.css" />
+    <title>Dynamic Input Fields with Expression Evaluation</title>
+</head>
+<body>
+    
+    <div id = "container_box">
+    <div id="container">
+        <input type="text" id="placeholderInput" placeholder="Enter Placeholder">
+        <span>
+        <button id="addInput">+</button>
+        </span>
+    </div>
+    <form id = dataForm>
+        <button id="saveData" type="button">Save</button>
+    </form>
+    </div>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const container = document.getElementById('dataForm');
+            const addButton = document.getElementById('addInput');
+            const placeholderInput = document.getElementById('placeholderInput');
+            let counter = 1;
+
+            addButton.addEventListener('click', function() {
+                const placeholder = placeholderInput.value;
+                if (!placeholder) {
+                    alert('Please enter a placeholder name.');
+                    return;
+                }
+
+                const inputField = document.createElement('input');
+                inputField.type = 'text';
+                inputField.className = 'input-field';
+                inputField.id = String.fromCharCode(96 + counter);
+                inputField.placeholder = placeholder;
+                inputField.name = placeholder;
+
+                const label = document.createElement('label');
+                label.setAttribute('for', inputField.id);
+                label.textContent = '(' + inputField.id + ')' + inputField.placeholder + ": "
+
+                const resultField = document.createElement('span');
+                resultField.className = 'result';
+                resultField.id = `result_${String.fromCharCode(96 + counter)}`;
+
+                container.appendChild(label);
+                container.appendChild(inputField);
+                container.appendChild(resultField);
+                container.appendChild(document.createElement('br'))
+
+                placeholderInput.value = ''; // Clear the input field
+                counter++;
+
+                inputField.addEventListener('input', function() {
+                    const expression = inputField.value;
+                    console.log("eventlistenter: ", expression);
+                    const result = evaluateExpression(expression);
+                    if (!isNaN(result)) {
+                        resultField.textContent = `${result.toFixed(2)}`;
+                    } else {
+                        resultField.textContent = '';
+                    }
+                });
+            });
+
+            function evaluateExpression(expression) {
+                try {
+                  console.log(expression);
+                    const variables = expression.match(/[a-z]/g);
+                    console.log(variables);
+                    if (variables) {
+                        let evaluatedExpression = expression;
+                        console.log(evaluatedExpression);
+                        for (const variable of variables) {
+                            const inputField = document.getElementById(`result_${variable}`);
+                            console.log(inputField);
+                            if (inputField) {
+                              console.log(inputField.innerHTML);
+                                const variableValue = parseFloat(inputField.innerHTML);
+                                evaluatedExpression = evaluatedExpression.replace(variable, variableValue);
+                                console.log(evaluatedExpression);
+                            }
+                        }
+                        return eval(evaluatedExpression);
+                    } else {
+                        return eval(expression);
+                    }
+                } catch (error) {
+                    return NaN;
+                }
+            }
+        });
+    </script>
+    <script src="/static/script.js"></script>
+</body>
+</html>
