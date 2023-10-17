@@ -22,3 +22,21 @@ saveButton.addEventListener('click', function() {
         // Handle errors, e.g., show an error message.
     });
 });
+
+const deleteButton = document.getElementById('deleteAllData');
+deleteButton.addEventListener('click', function() {
+    if (confirm('Are you sure you want to delete all data?')) {
+        fetch('/delete', {
+            method: 'POST'
+        })
+        .then(() => {
+            // Redirect to the index page
+            window.location.href = '/';
+        })
+        .catch(error => {
+            // Handle errors
+            console.error(error);
+        });
+    }
+});
+
