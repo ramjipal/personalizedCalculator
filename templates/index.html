@@ -23,7 +23,7 @@
           <button id="addInput"  type = "button" class = "btn btn-success m-3 md-4">+</button>
           <button id="saveData" type="button" class = "btn btn-primary m-3">Save</button>
           <button id="deleteAllData" type = "button" class = "btn btn-danger m-3"> Delete All</button>
-          <button id="refreshResults" type = "button" class = "btn btn-warning m-3"> refresh</button>
+          <button id="refreshResults" type = "button" class = "btn btn-warning m-3"> Refresh</button>
         </span>
       </div>
       <form id="dataForm">
@@ -48,17 +48,32 @@
         }
       }
 
-      // Function to evaluate expressions (replace with your own logic)
       function evaluateExpression(expression) {
         try {
-          // Your expression evaluation code here
-          return eval(expression);
+          console.log(expression);
+            const variables = expression.match(/[a-z]/g);
+            console.log(variables);
+            if (variables) {
+                let evaluatedExpression = expression;
+                console.log(evaluatedExpression);
+                for (const variable of variables) {
+                    const inputField = document.getElementById(`result_${variable}`);
+                    console.log(inputField);
+                    if (inputField) {
+                      console.log(inputField.innerHTML);
+                        const variableValue = parseFloat(inputField.innerHTML);
+                        evaluatedExpression = evaluatedExpression.replace(variable, variableValue);
+                        console.log(evaluatedExpression);
+                    }
+                }
+                return eval(evaluatedExpression);
+            } else {
+                return eval(expression);
+            }
         } catch (error) {
-          return NaN;
+            return NaN;
         }
-      }
-
-
+      };
       let counter = 1;
       const form_data = {{ form_data | tojson | safe }};
       if (form_data.length > 0) {
@@ -101,32 +116,7 @@
             });
         });
 
-        function evaluateExpression(expression) {
-            try {
-              console.log(expression);
-                const variables = expression.match(/[a-z]/g);
-                console.log(variables);
-                if (variables) {
-                    let evaluatedExpression = expression;
-                    console.log(evaluatedExpression);
-                    for (const variable of variables) {
-                        const inputField = document.getElementById(`result_${variable}`);
-                        console.log(inputField);
-                        if (inputField) {
-                          console.log(inputField.innerHTML);
-                            const variableValue = parseFloat(inputField.innerHTML);
-                            evaluatedExpression = evaluatedExpression.replace(variable, variableValue);
-                            console.log(evaluatedExpression);
-                        }
-                    }
-                    return eval(evaluatedExpression);
-                } else {
-                    return eval(expression);
-                }
-            } catch (error) {
-                return NaN;
-            }
-          };
+        
         }
 
       //--------------------------------------------------------------------------------------
@@ -179,32 +169,7 @@
               });
           });
 
-          function evaluateExpression(expression) {
-              try {
-                console.log(expression);
-                  const variables = expression.match(/[a-z]/g);
-                  console.log(variables);
-                  if (variables) {
-                      let evaluatedExpression = expression;
-                      console.log(evaluatedExpression);
-                      for (const variable of variables) {
-                          const inputField = document.getElementById(`result_${variable}`);
-                          console.log(inputField);
-                          if (inputField) {
-                            console.log(inputField.innerHTML);
-                              const variableValue = parseFloat(inputField.innerHTML);
-                              evaluatedExpression = evaluatedExpression.replace(variable, variableValue);
-                              console.log(evaluatedExpression);
-                          }
-                      }
-                      return eval(evaluatedExpression);
-                  } else {
-                      return eval(expression);
-                  }
-              } catch (error) {
-                  return NaN;
-              }
-          }
+          
       });
 
       // Add an input event listener to update results as you type
