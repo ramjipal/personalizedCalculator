@@ -23,6 +23,7 @@
           <button id="addInput"  type = "button" class = "btn btn-success m-3 md-4">+</button>
           <button id="saveData" type="button" class = "btn btn-primary m-3">Save</button>
           <button id="deleteAllData" type = "button" class = "btn btn-danger m-3"> Delete All</button>
+          <button id="refreshResults" type = "button" class = "btn btn-warning m-3"> refresh</button>
         </span>
       </div>
       <form id="dataForm">
@@ -31,6 +32,33 @@
     </div>
 
     <script>
+      function updateResults() {
+        const inputFields = document.getElementsByClassName('input-field');
+        for (const inputField of inputFields) {
+          const expression = inputField.value;
+          const resultField = document.getElementById(`result_${inputField.id}`);
+          if (resultField) {
+            const result = evaluateExpression(expression);
+            if (!isNaN(result)) {
+              resultField.textContent = result.toFixed(2);
+            } else {
+              resultField.textContent = '';
+            }
+          }
+        }
+      }
+
+      // Function to evaluate expressions (replace with your own logic)
+      function evaluateExpression(expression) {
+        try {
+          // Your expression evaluation code here
+          return eval(expression);
+        } catch (error) {
+          return NaN;
+        }
+      }
+
+
       let counter = 1;
       const form_data = {{ form_data | tojson | safe }};
       if (form_data.length > 0) {
@@ -99,8 +127,7 @@
                 return NaN;
             }
           };
-
-      }
+        }
 
       //--------------------------------------------------------------------------------------
       document.addEventListener('DOMContentLoaded', function() {
@@ -140,6 +167,7 @@
               counter++;
 
               inputField.addEventListener('input', function() {
+                
                   const expression = inputField.value;
                   console.log("eventlistenter: ", expression);
                   const result = evaluateExpression(expression);
@@ -178,6 +206,18 @@
               }
           }
       });
+
+      // Add an input event listener to update results as you type
+      document.addEventListener('input', updateResults);
+
+      // Function to refresh all results
+      function refreshResults() {
+        updateResults();
+      }
+
+      // Attach the refreshResults function to a button click
+      const refreshButton = document.getElementById('refreshButton');
+      refreshButton.addEventListener('click', refreshResults);
     </script>
     
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
