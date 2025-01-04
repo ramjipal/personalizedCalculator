@@ -12,15 +12,13 @@ class FormData(db.Model):
     
 @app.route('/')
 def index():
-    print("i am redirected")
+    return render_template('index.html')  # Load HTML template
+
+@app.route('/get-form-data', methods=['GET'])
+def get_form_data():
     form_data = FormData.query.all()  # Fetch data from the database
-    print(form_data)
-    form_data_json = []  # Initialize an empty list
-
-    for data in form_data:
-        form_data_json.append({'name': data.name, 'value': data.value})
-
-    return render_template('index.html', form_data=form_data_json)
+    form_data_json = [{'name': data.name, 'value': data.value} for data in form_data]
+    return jsonify(form_data_json)  # Return data as JSON
 
 
 @app.route('/save_data', methods=['POST'])
@@ -48,5 +46,5 @@ def simpleCalculator():
 
 if __name__ == '__main__':
    with app.app_context():
-        db.create_all()
+        # db.create_all()
         app.run(debug=True)
